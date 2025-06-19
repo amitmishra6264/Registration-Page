@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --accent: #ff3c00;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+        
+        .card {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #f8fafc;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus + .input-icon {
+            color: var(--primary);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            background-color: white;
+            color: #334155;
+        }
+        
+        .social-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .divider {
+            position: relative;
+            margin: 1.5rem 0;
+            text-align: center;
+            color: #94a3b8;
+        }
+        
+        .divider::before, .divider::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background-color: #e2e8f0;
+        }
+        
+        .divider::before {
+            left: 0;
+        }
+        
+        .divider::after {
+            right: 0;
+        }
+        
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(67, 97, 238, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(67, 97, 238, 0);
+            }
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #64748b;
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(67,97,238,0.5) 0%, rgba(67,97,238,0) 70%);
+            z-index: -1;
+        }
+        
+        @media (max-width: 640px) {
+            .card {
+                width: 95%;
+                padding: 1.5rem;
+            }
+        }
+        
+        /* Animation classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Random floating orbs for background effect -->
+    <div class="floating-orb" style="width: 200px; height: 200px; top: -50px; left: -50px;"></div>
+    <div class="floating-orb" style="width: 300px; height: 300px; bottom: -100px; right: -100px;"></div>
+    
+    <div class="card w-full max-w-md mx-4 p-8 rounded-xl fade-in">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Create Account</h1>
+            <p class="text-gray-600">Join our community and unlock amazing features</p>
+        </div>
+        
+        <form id="registerForm" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="input-group">
+                    <input type="text" id="firstName" class="input-field" placeholder="First Name" required>
+                    <i class="fas fa-user input-icon"></i>
+                    <div class="error-message" id="firstNameError">Please enter your first name</div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="lastName" class="input-field" placeholder="Last Name" required>
+                    <i class="fas fa-user input-icon"></i>
+                    <div class="error-message" id="lastNameError">Please enter your last name</div>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <input type="email" id="email" class="input-field" placeholder="Email Address" required>
+                <i class="fas fa-envelope input-icon"></i>
+                <div class="error-message" id="emailError">Please enter a valid email address</div>
+            </div>
+            
+            <div class="input-group">
+                <input type="password" id="password" class="input-field" placeholder="Password" required minlength="8">
+                <i class="fas fa-lock input-icon"></i>
+                <span class="toggle-password" onclick="togglePassword('password', this)">
+                    <i class="fas fa-eye"></i>
+                </span>
+                <div class="error-message" id="passwordError">Password must be at least 8 characters</div>
+            </div>
+            
+            <div class="input-group">
+                <input type="password" id="confirmPassword" class="input-field" placeholder="Confirm Password" required>
+                <i class="fas fa-lock input-icon"></i>
+                <span class="toggle-password" onclick="togglePassword('confirmPassword', this)">
+                    <i class="fas fa-eye"></i>
+                </span>
+                <div class="error-message" id="confirmPasswordError">Passwords don't match</div>
+            </div>
+            
+            <div class="flex items-center mb-4">
+                <input type="checkbox" id="terms" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2" required>
+                <label for="terms" class="text-sm text-gray-600">
+                    I agree to the <a href="#" class="text-blue-600 hover:underline">Terms & Conditions</a> and <a href="#" class="text-blue-600 hover:underline">Privacy Policy</a>
+                </label>
+            </div>
+            <div class="error-message" id="termsError">You must accept the terms and conditions</div>
+            
+            <button type="submit" class="btn-primary animate-pulse">
+                Register Now <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+            
+            <div class="divider">OR CONTINUE WITH</div>
+            
+            <div class="grid grid-cols-3 gap-2">
+                <button type="button" class="social-btn">
+                    <i class="fab fa-google text-red-500"></i>
+                </button>
+                <button type="button" class="social-btn">
+                    <i class="fab fa-facebook-f text-blue-600"></i>
+                </button>
+                <button type="button" class="social-btn">
+                    <i class="fab fa-apple"></i>
+                </button>
+            </div>
+            
+            <div class="text-center mt-6 text-sm text-gray-600">
+                Already have an account? <a href="#" class="text-blue-600 font-medium hover:underline">Sign In</a>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        // Toggle password visibility
+        function togglePassword(id, el) {
+            const passwordField = document.getElementById(id);
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                el.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            } else {
+                passwordField.type = 'password';
+                el.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+        }
+        
+        // Form validation
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let isValid = true;
+            
+            // Validate first name
+            const firstName = document.getElementById('firstName');
+            if (!firstName.value.trim()) {
+                document.getElementById('firstNameError').style.display = 'block';
+                firstName.classList.add('border-red-500');
+                isValid = false;
+            } else {
+                document.getElementById('firstNameError').style.display = 'none';
+                firstName.classList.remove('border-red-500');
+            }
+            
+            // Validate last name
+            const lastName = document.getElementById('lastName');
+            if (!lastName.value.trim()) {
+                document.getElementById('lastNameError').style.display = 'block';
+                lastName.classList.add('border-red-500');
+                isValid = false;
+            } else {
+                document.getElementById('lastNameError').style.display = 'none';
+                lastName.classList.remove('border-red-500');
+            }
+            
+            // Validate email
+            const email = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.value)) {
+                document.getElementById('emailError').style.display = 'block';
+                email.classList.add('border-red-500');
+                isValid = false;
+            } else {
+                document.getElementById('emailError').style.display = 'none';
+                email.classList.remove('border-red-500');
+            }
+            
+            // Validate password
+            const password = document.getElementById('password');
+            if (password.value.length < 8) {
+                document.getElementById('passwordError').style.display = 'block';
+                password.classList.add('border-red-500');
+                isValid = false;
+            } else {
+                document.getElementById('passwordError').style.display = 'none';
+                password.classList.remove('border-red-500');
+            }
+            
+            // Validate confirm password
+            const confirmPassword = document.getElementById('confirmPassword');
+            if (confirmPassword.value !== password.value) {
+                document.getElementById('confirmPasswordError').style.display = 'block';
+                confirmPassword.classList.add('border-red-500');
+                isValid = false;
+            } else {
+                document.getElementById('confirmPasswordError').style.display = 'none';
+                confirmPassword.classList.remove('border-red-500');
+            }
+            
+            // Validate terms
+            const terms = document.getElementById('terms');
+            if (!terms.checked) {
+                document.getElementById('termsError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('termsError').style.display = 'none';
+            }
+            
+            // If all valid, simulate form submission
+            if (isValid) {
+                // In a real app, you would submit to server here
+                alert('Registration successful! Welcome aboard!');
+                this.reset();
+            }
+        });
+        
+        // Add some floating orb animation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create additional floating orbs
+            for (let i = 0; i < 3; i++) {
+                const orb = document.createElement('div');
+                orb.className = 'floating-orb';
+                
+                // Random size and position
+                const size = Math.random() * 150 + 50;
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                
+                orb.style.width = `${size}px`;
+                orb.style.height = `${size}px`;
+                orb.style.left = `${left}vw`;
+                orb.style.top = `${top}vh`;
+                
+                // Random animation
+                orb.style.animation = `float ${Math.random() * 10 + 5}s ease-in-out infinite alternate`;
+                
+                document.body.appendChild(orb);
+            }
+        });
+    </script>
+</body>
+</html>
