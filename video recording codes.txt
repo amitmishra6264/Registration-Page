@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Editor Prep Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .timeline {
+            height: 100px;
+            background: #2d3748;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        .clip {
+            display: inline-block;
+            height: 80px;
+            margin: 10px;
+            background: #4a5568;
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+        }
+        .clip:hover {
+            background: #718096;
+        }
+        .controls {
+            background: #1a202c;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        #preview {
+            background: #000;
+            border-radius: 8px;
+            aspect-ratio: 16/9;
+        }
+        .tooltip {
+            visibility: hidden;
+            position: absolute;
+            z-index: 1;
+            background: #000;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .clip:hover .tooltip {
+            visibility: visible;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center mb-2 bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">Video Editor Prep Tool</h1>
+        <p class="text-center text-gray-400 mb-8">Organize your clips before editing in professional software</p>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Panel - Clip Library -->
+            <div class="bg-gray-800 p-6 rounded-xl">
+                <h2 class="text-xl font-semibold mb-4">Your Video Clips</h2>
+                <div class="space-y-4" id="clipLibrary">
+                    <div class="flex items-center justify-between bg-gray-700 p-3 rounded-lg">
+                        <span>Clip 1.mp4</span>
+                        <button class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded" onclick="addToTimeline('Clip 1')">Add</button>
+                    </div>
+                    <div class="flex items-center justify-between bg-gray-700 p-3 rounded-lg">
+                        <span>Clip 2.mp4</span>
+                        <button class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded" onclick="addToTimeline('Clip 2')">Add</button>
+                    </div>
+                    <div class="flex items-center justify-between bg-gray-700 p-3 rounded-lg">
+                        <span>Clip 3.mp4</span>
+                        <button class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded" onclick="addToTimeline('Clip 3')">Add</button>
+                    </div>
+                    <div class="flex items-center justify-between bg-gray-700 p-3 rounded-lg">
+                        <span>B-Roll 1.mp4</span>
+                        <button class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded" onclick="addToTimeline('B-Roll 1')">Add</button>
+                    </div>
+                    <div class="flex items-center justify-between bg-gray-700 p-3 rounded-lg">
+                        <span>Interview.mp4</span>
+                        <button class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded" onclick="addToTimeline('Interview')">Add</button>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <h3 class="font-medium mb-2">Upload More Clips</h3>
+                    <div class="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center">
+                        <input type="file" id="fileUpload" class="hidden" accept="video/*" multiple>
+                        <label for="fileUpload" class="cursor-pointer block">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                            <p class="mt-2">Drag & drop files or click to browse</p>
+                            <p class="text-sm text-gray-500">Supports MP4, MOV, AVI</p>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Center Panel - Preview and Timeline -->
+            <div class="lg:col-span-2 space-y-6">
+                <div id="preview" class="flex items-center justify-center">
+                    <p class="text-gray-500">Video preview will appear here</p>
+                </div>
+                
+                <div class="controls">
+                    <div class="flex justify-center space-x-4 mb-4">
+                        <button class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                            </svg>
+                            Play
+                        </button>
+                        <button class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                            Pause
+                        </button>
+                        <button class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                            </svg>
+                            Trim
+                        </button>
+                        <button class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
+                            </svg>
+                            Effects
+                        </button>
+                    </div>
+                    
+                    <h3 class="font-medium mb-2">Timeline</h3>
+                    <div class="timeline" id="timeline">
+                        <!-- Clips will be added here -->
+                    </div>
+                    
+                    <div class="mt-4 flex justify-between items-center">
+                        <div class="text-sm text-gray-400">
+                            Duration: <span id="duration">0:00</span>
+                        </div>
+                        <button class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                            Export Plan
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-800 p-6 rounded-xl">
+                    <h2 class="text-xl font-semibold mb-4">Editing Tips</h2>
+                    <div class="space-y-4">
+                        <div class="bg-gray-700 p-4 rounded-lg">
+                            <h3 class="font-medium text-blue-400">1. Keep it Short</h3>
+                            <p class="text-sm text-gray-300">For company videos, 60-90 seconds is ideal. Focus on your key message.</p>
+                        </div>
+                        <div class="bg-gray-700 p-4 rounded-lg">
+                            <h3 class="font-medium text-blue-400">2. Strong Opening</h3>
+                            <p class="text-sm text-gray-300">Grab attention in the first 5 seconds with your most compelling footage.</p>
+                        </div>
+                        <div class="bg-gray-700 p-4 rounded-lg">
+                            <h3 class="font-medium text-blue-400">3. Free Editing Software</h3>
+                            <p class="text-sm text-gray-300">Try DaVinci Resolve (professional) or Shotcut (simple) for free editing.</p>
+                        </div>
+                        <div class="bg-gray-700 p-4 rounded-lg">
+                            <h3 class="font-medium text-blue-400">4. Add Text</h3>
+                            <p class="text-sm text-gray-300">Overlay your company name, key points, and call-to-action.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple functionality for the interface
+        function addToTimeline(clipName) {
+            const timeline = document.getElementById('timeline');
+            const clip = document.createElement('div');
+            clip.className = 'clip';
+            clip.style.width = `${Math.floor(Math.random() * 100) + 50}px`;
+            
+            const tooltip = document.createElement('span');
+            tooltip.className = 'tooltip';
+            tooltip.textContent = clipName;
+            clip.appendChild(tooltip);
+            
+            timeline.appendChild(clip);
+            
+            // Update duration display
+            const durationElement = document.getElementById('duration');
+            const currentDuration = durationElement.textContent.split(':');
+            let seconds = parseInt(currentDuration[1]) + 5;
+            let minutes = parseInt(currentDuration[0]);
+            
+            if (seconds >= 60) {
+                minutes += 1;
+                seconds = seconds % 60;
+            }
+            
+            durationElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // File upload handler
+        document.getElementById('fileUpload').addEventListener('change', function(e) {
+            const files = e.target.files;
+            const clipLibrary = document.getElementById('clipLibrary');
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const clipElement = document.createElement('div');
+                clipElement.className = 'flex items-center justify-between bg-gray-700 p-3 rounded-lg';
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = file.name;
+                
+                const addButton = document.createElement('button');
+                addButton.className = 'bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded';
+                addButton.textContent = 'Add';
+                addButton.onclick = function() {
+                    addToTimeline(file.name);
+                };
+                
+                clipElement.appendChild(nameSpan);
+                clipElement.appendChild(addButton);
+                clipLibrary.appendChild(clipElement);
+            }
+            
+            alert(`${files.length} files added to your clip library!`);
+        });
+    </script>
+</body>
+</html>
