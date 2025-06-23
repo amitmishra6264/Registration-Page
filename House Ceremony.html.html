@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amit Mishra - House Warming Ceremony</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Tangerine:wght@700&display=swap');
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #fdf6f0;
+            overflow-x: hidden;
+        }
+        
+        .invitation-card {
+            background: linear-gradient(135deg, #fff9f9 0%, #fff0eb 100%);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+        }
+        
+        .gold-border {
+            border: 12px solid transparent;
+            border-image: linear-gradient(45deg, #d4af37, #f5d062, #d4af37);
+            border-image-slice: 1;
+            position: relative;
+        }
+        
+        .title {
+            font-family: 'Tangerine', cursive;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .hindi {
+            font-family: 'Mangal', sans-serif;
+        }
+        
+        .flower {
+            position: absolute;
+            opacity: 0.7;
+            z-index: 1;
+            animation: float 6s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        
+        .photo-frame {
+            border: 8px solid #d4af37;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: rotate(-2deg);
+            transition: all 0.3s ease;
+        }
+        
+        .photo-frame:hover {
+            transform: rotate(0deg) scale(1.02);
+        }
+        
+        .heart {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0;
+        }
+        
+        @keyframes heart-fall {
+            0% {
+                transform: translateY(-100px);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(1000px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .date-box {
+            background: linear-gradient(135deg, #d4af37 0%, #f5d062 100%);
+            transform: rotate(-2deg);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .date-box:hover {
+            transform: rotate(0deg) scale(1.05);
+        }
+        
+        .leaves-left {
+            position: absolute;
+            left: -50px;
+            top: 20%;
+            z-index: 1;
+            animation: sway-left 8s infinite ease-in-out;
+        }
+        
+        .leaves-right {
+            position: absolute;
+            right: -50px;
+            top: 60%;
+            z-index: 1;
+            animation: sway-right 8s infinite ease-in-out;
+        }
+        
+        @keyframes sway-left {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+        
+        @keyframes sway-right {
+            0%, 100% { transform: rotate(5deg); }
+            50% { transform: rotate(-5deg); }
+        }
+        
+        /* For the ribbon */
+        .ribbon {
+            position: absolute;
+            top: -10px;
+            width: 150px;
+            height: 30px;
+            background-color: #d4af37;
+            color: white;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .ribbon:before, .ribbon:after {
+            content: '';
+            position: absolute;
+            border-style: solid;
+            border-color: transparent;
+            bottom: -10px;
+        }
+        
+        .ribbon:before {
+            border-width: 0 10px 10px 0;
+            border-right-color: #b38d2d;
+            left: 0;
+        }
+        
+        .ribbon:after {
+            border-width: 0 0 10px 10px;
+            border-left-color: #b38d2d;
+            right: 0;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="invitation-container relative w-full max-w-3xl">
+        <!-- Decorative elements -->
+        <div class="leaves-left">
+            <img src="https://i.ibb.co/5KfyP6B/leaves.png" width="100" alt="decorative leaves">
+        </div>
+        <div class="leaves-right">
+            <img src="https://i.ibb.co/5KfyP6B/leaves.png" width="100" alt="decorative leaves">
+        </div>
+        
+        <!-- Main invitation card -->
+        <div class="invitation-card gold-border pt-14 pb-10 px-8 sm:px-12 relative">
+            <!-- Ribbon corner -->
+            <div class="ribbon right-0">
+                Amit
+            </div>
+            
+            <!-- Title -->
+            <div class="text-center mb-8 relative z-10">
+                <h1 class="title text-5xl sm:text-7xl text-gold-600 mb-2 animate-bounce">
+                    House Warming Ceremony Invitation
+                </h1>
+                <h2 class="text-xl sm:text-2xl text-gray-600 mb-6">
+                    हमारे गृह प्रवेश समारोह का निमंत्रण
+                </h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-yellow-500 to-red-400 mx-auto mb-6"></div>
+            </div>
+            
+            <!-- Photo placeholder -->
+            <div class="flex justify-center mb-8 relative z-10">
+                <div class="photo-frame w-48 h-48 sm:w-500 sm:h-500 bg-gray-200 flex items-center justify-center">
+                <img src="C:\Users\ADMIN\OneDrive\Desktop\Amit Mishra\image.png" alt="Description of Image" width="500" height="auto"></img>
+                    <p class="text-gray-500 text-center p-4"></p>
+                </div>
+            </div>
+            
+            <!-- Content -->
+            <div class="relative z-10">
+                <div class="text-center mb-8">
+                    <p class="text-lg sm:text-xl mb-4 leading-relaxed">
+                        With joyful hearts<br>
+                        SAROJ MISHRA & Family<br>
+                        request the pleasure of your company<br>
+                        as we celebrate our<br>
+                        <span class="text-2xl font-bold text-yellow-600">House Warming Ceremony</span>
+                    </p>
+                    
+                    <p class="hindi text-lg sm:text-xl mb-6 leading-relaxed">
+                        सIदर और विनम्र निमंत्रण<br>
+                        गृह प्रवेश उत्सव में आपकी पधारने की अभिलाषा के साथ
+                    </p>
+                </div>
+                
+                <!-- Date and time -->
+                <div class="flex justify-center mb-8">
+                    <div class="date-box p-4 sm:p-6 text-center">
+                        <h3 class="text-xl font-bold text-white mb-2">Date & Time</h3>
+                        <p class="text-lg text-white">
+                            30th July 2025<br>
+                            11:00 AM onwards<br>
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="text-center mb-6">
+                    <p class="text-lg mb-4">
+                        Venue:<br>
+                        <span class="font-bold">Surat, Bardoli, Opp.Green Apple Hospital, Tulsi Tower</span>
+                    </p>
+                    <p class="hindi">
+                        स्थान:<br>
+                        <span class="font-bold">सूरत, बारडोली, ग्रीन एप्पल हॉस्पिटल के सामने, तुलसी टावर</span>
+                    </p>
+                </div>
+                
+                <div class="text-center text-sm sm:text-base">
+                    <p class="mb-4">Your presence will grace our occasion</p>
+                    <p class="hindi">आपकी उपस्थिति हमारे उत्सव की शोभा बढ़ाएगी</p>
+                </div>
+            </div>
+            
+            <!-- Floral decorations -->
+            <div class="flower" style="top: 10%; left: 5%; width: 30px; animation-delay: 0.5s;">
+                <img src=""C:\Users\ADMIN\OneDrive\Desktop\Amit Mishra\download.jpg">
+            </div>
+            <div class="flower" style="top: 80%; right: 8%; width: 40px; animation-delay: 1s;">
+                <img src=""C:\Users\ADMIN\OneDrive\Desktop\Amit Mishra\download.jpg">
+            </div>
+            <div class="flower" style="bottom: 15%; left: 10%; width: 25px; animation-delay: 1.5s;">
+                <img src=""C:\Users\ADMIN\OneDrive\Desktop\Amit Mishra\download.jpg">
+            </div>
+            <div class="flower" style="top: 30%; right: 5%; width: 35px; animation-delay: 2s;">
+                <img src=""C:\Users\ADMIN\OneDrive\Desktop\Amit Mishra\download.jpeg">
+            </img>
+            </div>
+
+            
+            <!-- Credits -->
+            <div class="text-center text-xs text-gray-500 mt-10">
+                <p>Design Co-ordinator: Amit Mishra</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Create floating hearts animation
+        function createHearts() {
+            const colors = ['#ff6b6b', '#ffa3a3', '#ffd3b6', '#dcedc1', '#a8e6cf', '#f2b5d4'];
+            
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+                heart.style.animation = 'heart-fall ' + (Math.random() * 5 + 5) + 's linear forwards';
+                document.body.appendChild(heart);
+                
+                // Remove heart after animation completes
+                setTimeout(() => {
+                    heart.remove();
+                }, 10000);
+            }, 300);
+        }
+        
+        // Start animations when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            createHearts();
+            
+            // Add glow effect to title
+            const title = document.querySelector('.title');
+            setInterval(() => {
+                title.style.textShadow = `0 0 ${Math.random()*10+5}px rgba(212,175,55,${Math.random()*0.5+0.5})`;
+            }, 1000);
+            
+            // Add interactive element
+            const photoFrame = document.querySelector('.photo-frame');
+            photoFrame.addEventListener('click', () => {
+                alert('Please upload your family photo here to personalize your invitation!');
+            });
+        });
+    </script>
+</body>
+</html>
