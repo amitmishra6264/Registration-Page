@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awesome Google Form Clone</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-color: #4285F4;
+            --secondary-color: #34A853;
+            --error-color: #EA4335;
+            --border-color: #dadce0;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #202124;
+            line-height: 1.6;
+        }
+        
+        .form-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            margin: -30px -30px 30px -30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .form-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #4285F4, #34A853, #FBBC05, #EA4335);
+        }
+        
+        .form-title {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .form-description {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .form-section:last-child {
+            border-bottom: none;
+        }
+        
+        .question-container {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .question-label {
+            display: block;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #202124;
+        }
+        
+        .question-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .question-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.3);
+            outline: none;
+        }
+        
+        .radio-group, .checkbox-group {
+            margin-top: 10px;
+        }
+        
+        .radio-option, .checkbox-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .radio-option input, .checkbox-option input {
+            margin-right: 10px;
+        }
+        
+        .dropdown {
+            position: relative;
+            width: 100%;
+        }
+        
+        .dropdown-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 1em;
+        }
+        
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+        
+        .submit-btn:hover {
+            background-color: #3367d6;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .submit-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .error-message {
+            color: var(--error-color);
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .character-count {
+            font-size: 12px;
+            color: #70757a;
+            text-align: right;
+            margin-top: 5px;
+        }
+        
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background-color: #e8f0fe;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .success-icon {
+            font-size: 48px;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+        
+        .success-title {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .success-text {
+            font-size: 14px;
+            color: #5f6368;
+        }
+        
+        @media (max-width: 768px) {
+            .form-container {
+                margin: 20px;
+                padding: 20px;
+            }
+            
+            .form-header {
+                margin: -20px -20px 20px -20px;
+            }
+        }
+        
+        /* Animation classes */
+        .shake {
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(66, 133, 244, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <h1 class="form-title">Customer Feedback Survey</h1>
+            <p class="form-description">Help us improve our services by sharing your experience</p>
+        </div>
+        
+        <form id="feedbackForm">
+            <div class="form-section">
+                <div class="question-container">
+                    <label for="name" class="question-label">Your Name</label>
+                    <input type="text" id="name" class="question-input" placeholder="Enter your full name">
+                    <div id="nameError" class="error-message">Please enter your name</div>
+                </div>
+                
+                <div class="question-container">
+                    <label for="email" class="question-label">Email Address</label>
+                    <input type="email" id="email" class="question-input" placeholder="Enter your email address">
+                    <div id="emailError" class="error-message">Please enter a valid email address</div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <div class="question-container">
+                    <label class="question-label">How satisfied are you with our service?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="verySatisfied" name="satisfaction" value="Very Satisfied">
+                            <label for="verySatisfied">Very Satisfied</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="satisfied" name="satisfaction" value="Satisfied">
+                            <label for="satisfied">Satisfied</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="neutral" name="satisfaction" value="Neutral">
+                            <label for="neutral">Neutral</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="dissatisfied" name="satisfaction" value="Dissatisfied">
+                            <label for="dissatisfied">Dissatisfied</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="veryDissatisfied" name="satisfaction" value="Very Dissatisfied">
+                            <label for="veryDissatisfied">Very Dissatisfied</label>
+                        </div>
+                    </div>
+                    <div id="satisfactionError" class="error-message">Please select an option</div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <div class="question-container">
+                    <label for="feedback" class="question-label">What could we improve?</label>
+                    <textarea id="feedback" class="question-input" rows="4" placeholder="Share your feedback (optional)"></textarea>
+                    <div class="character-count"><span id="charCount">0</span>/500</div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <div class="question-container">
+                    <label for="frequency" class="question-label">How often do you use our service?</label>
+                    <div class="dropdown">
+                        <select id="frequency" class="dropdown-select">
+                            <option value="" disabled selected>Select frequency</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="rarely">Rarely</option>
+                            <option value="first-time">First time</option>
+                        </select>
+                    </div>
+                    <div id="frequencyError" class="error-message">Please select an option</div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <div class="question-container">
+                    <label class="question-label">Which features do you use most? (Select all that apply)</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="feature1" name="features" value="Dashboard">
+                            <label for="feature1">Dashboard</label>
+                        </div>
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="feature2" name="features" value="Reports">
+                            <label for="feature2">Reports</label>
+                        </div>
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="feature3" name="features" value="Notifications">
+                            <label for="feature3">Notifications</label>
+                        </div>
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="feature4" name="features" value="Analytics">
+                            <label for="feature4">Analytics</label>
+                        </div>
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="feature5" name="features" value="Settings">
+                            <label for="feature5">Settings</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn pulse" id="submitBtn">
+                Submit Feedback
+            </button>
+            
+            <div class="success-message" id="successMessage">
+                <div class="success-icon">✓</div>
+                <h2 class="success-title">Thank You!</h2>
+                <p class="success-text">Your feedback has been successfully submitted. We appreciate your time!</p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('feedbackForm');
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+            const feedbackTextarea = document.getElementById('feedback');
+            const charCount = document.getElementById('charCount');
+            const submitBtn = document.getElementById('submitBtn');
+            const successMessage = document.getElementById('successMessage');
+            
+            // Character counter for feedback textarea
+            feedbackTextarea.addEventListener('input', function() {
+                const currentLength = this.value.length;
+                charCount.textContent = currentLength;
+                
+                if (currentLength > 500) {
+                    this.value = this.value.substring(0, 500);
+                    charCount.textContent = 500;
+                }
+            });
+            
+            // Form validation and submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                let isValid = true;
+                
+                // Validate name
+                if (nameInput.value.trim() === '') {
+                    document.getElementById('nameError').style.display = 'block';
+                    nameInput.classList.add('shake');
+                    isValid = false;
+                } else {
+                    document.getElementById('nameError').style.display = 'none';
+                    nameInput.classList.remove('shake');
+                }
+                
+                // Validate email
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(emailInput.value.trim())) {
+                    document.getElementById('emailError').style.display = 'block';
+                    emailInput.classList.add('shake');
+                    isValid = false;
+                } else {
+                    document.getElementById('emailError').style.display = 'none';
+                    emailInput.classList.remove('shake');
+                }
+                
+                // Validate satisfaction radio buttons
+                const satisfactionSelected = document.querySelector('input[name="satisfaction"]:checked');
+                if (!satisfactionSelected) {
+                    document.getElementById('satisfactionError').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('satisfactionError').style.display = 'none';
+                }
+                
+                // Validate frequency dropdown
+                const frequencySelect = document.getElementById('frequency');
+                if (!frequencySelect.value) {
+                    document.getElementById('frequencyError').style.display = 'block';
+                    frequencySelect.classList.add('shake');
+                    isValid = false;
+                } else {
+                    document.getElementById('frequencyError').style.display = 'none';
+                    frequencySelect.classList.remove('shake');
+                }
+                
+                // If form is valid, show success message
+                if (isValid) {
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Submitting...';
+                    
+                    // Simulate form submission delay
+                    setTimeout(function() {
+                        form.style.display = 'none';
+                        successMessage.style.display = 'block';
+                        
+                        // Here you would typically send the form data to a server
+                        console.log('Form submitted with data:', {
+                            name: nameInput.value.trim(),
+                            email: emailInput.value.trim(),
+                            satisfaction: satisfactionSelected.value,
+                            feedback: feedbackTextarea.value.trim(),
+                            frequency: frequencySelect.value,
+                            features: Array.from(document.querySelectorAll('input[name="features"]:checked')).map(el => el.value)
+                        });
+                    }, 1500);
+                }
+            });
+            
+            // Remove shake animation after it completes
+            const inputs = [nameInput, emailInput, document.getElementById('frequency')];
+            inputs.forEach(input => {
+                input.addEventListener('animationend', function() {
+                    this.classList.remove('shake');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
