@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quality Inspector | CK HIL BIRLA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            overflow-x: hidden;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+        }
+        
+        .quality-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .quality-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .accepted-badge {
+            background-color: #10b981;
+            animation: pulse 2s infinite;
+        }
+        
+        .rejected-badge {
+            background-color: #ef4444;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+        
+        .drop-zone {
+            border: 2px dashed #cbd5e1;
+            transition: all 0.3s ease;
+        }
+        
+        .drop-zone.active {
+            border-color: #2563eb;
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+        
+        .progress-bar {
+            transition: width 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex flex-col">
+        <!-- Header with Logo -->
+        <header class="gradient-bg text-white py-6 px-4 sm:px-6 lg:px-8">
+            <div class="container mx-auto flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/26e9e238-d2bb-48ea-a3d5-bd9da7276a95.png" alt="CK HIL BIRLA company logo - modern geometric design with blue and white colors" class="w-10 h-10" />
+                    </div>
+                    <span class="text-2xl font-bold">CK HIL BIRLA</span>
+                </div>
+                <span class="text-lg font-medium">Quality Inspector</span>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Image Upload Panel -->
+                <div class="quality-card bg-white rounded-xl p-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">Article Inspection</h2>
+                    
+                    <div class="drop-zone rounded-lg p-8 text-center mb-6" id="dropZone">
+                        <div class="flex flex-col items-center justify-center space-y-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                            <p class="text-gray-600">Drag & drop article image here</p>
+                            <p class="text-sm text-gray-500">or</p>
+                            <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                                Browser Files
+                            </button>
+                        </div>
+                        <input type="file" id="fileInput" class="hidden" accept="image/*">
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-700">Quantity Verified:</span>
+                            <span class="font-medium" id="quantityStatus">--</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-700">Quality Check:</span>
+                            <span class="font-medium" id="qualityStatus">--</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-700">Overall Status:</span>
+                            <span class="font-medium" id="overallStatus">--</span>
+                        </div>
+                        
+                        <div class="progress-container h-2 bg-gray-200 rounded-full mt-6 hidden" id="progressContainer">
+                            <div class="progress-bar h-full bg-blue-500 rounded-full w-0" id="progressBar"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Results Panel -->
+                <div class="quality-card bg-white rounded-xl p-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-6">Inspection Result</h2>
+                    
+                    <div class="flex flex-col items-center justify-center space-y-6">
+                        <!-- Preview Image -->
+                        <div class="relative w-full h-64 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
+                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/6ae5541c-b9ce-40c2-a803-b4b6722feaa2.png" alt="Article sample placeholder - will show actual product image after upload" class="max-w-full max-h-full" id="previewImage" />
+                            <div class="absolute inset-0 flex items-center justify-center" id="placeholderText">
+                                <p class="text-gray-500">Article preview will appear here</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Status Indicator -->
+                        <div class="w-full flex justify-center">
+                            <div class="px-6 py-3 rounded-full text-white font-bold hidden" id="statusBadge">
+                                PROCESSING
+                            </div>
+                        </div>
+                        
+                        <!-- Results Details -->
+                        <div class="w-full space-y-4 hidden" id="resultsDetails">
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-700">Product ID:</span>
+                                <span class="font-medium" id="productId">--</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-700">Detected Articles:</span>
+                                <span class="font-medium" id="detectedQuantity">0</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-700">Quality Issues:</span>
+                                <span class="font-medium" id="qualityIssues">0</span>
+                            </div>
+                            
+                            <!-- Issues List -->
+                            <div class="mt-6 hidden" id="issuesContainer">
+                                <h3 class="font-medium text-gray-800 mb-2">Identified Issues:</h3>
+                                <ul class="list-disc pl-5 space-y-1" id="issuesList"></ul>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="flex space-x-4 mt-6 hidden" id="actionButtons">
+                            <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition">
+                                Recheck
+                            </button>
+                            <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                                Process Next
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="bg-gray-800 text-white py-6 px-4 sm:px-6 lg:px-8">
+            <div class="container mx-auto text-center">
+                <p>© 2025 CK HIL BIRLA Quality Inspection System. All rights reserved.</p>
+                <p>Designed By : AMIT MISHRA.</p>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('fileInput');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const previewImage = document.getElementById('previewImage');
+            const placeholderText = document.getElementById('placeholderText');
+            const statusBadge = document.getElementById('statusBadge');
+            const resultsDetails = document.getElementById('resultsDetails');
+            const actionButtons = document.getElementById('actionButtons');
+            const issuesContainer = document.getElementById('issuesContainer');
+            const issuesList = document.getElementById('issuesList');
+            const quantityStatus = document.getElementById('quantityStatus');
+            const qualityStatus = document.getElementById('qualityStatus');
+            const overallStatus = document.getElementById('overallStatus');
+            const productId = document.getElementById('productId');
+            const detectedQuantity = document.getElementById('detectedQuantity');
+            const qualityIssues = document.getElementById('qualityIssues');
+            
+            // Status elements
+            [
+                'quantityStatus',
+                'qualityStatus',
+                'overallStatus',
+                'productId',
+                'detectedQuantity',
+                'qualityIssues'
+            ].forEach(id => {
+                document.getElementById(id).textContent = '--';
+            });
+            
+            // Prevent default drag behaviors
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            // Highlight drop zone when item is dragged over it
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                dropZone.classList.add('active');
+            }
+            
+            function unhighlight() {
+                dropZone.classList.remove('active');
+            }
+            
+            // Handle dropped files
+            dropZone.addEventListener('drop', handleDrop, false);
+            
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            }
+            
+            // Handle click on drop zone
+            dropZone.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // Handle file selection
+            fileInput.addEventListener('change', function() {
+                handleFiles(this.files);
+            });
+            
+            function handleFiles(files) {
+                if (files.length === 0) return;
+                
+                const file = files[0];
+                if (!file.type.match('image.*')) {
+                    alert('Please upload an image file');
+                    return;
+                }
+                
+                // Show processing state
+                statusBadge.textContent = 'PROCESSING';
+                statusBadge.className = 'px-6 py-3 rounded-full text-white font-bold bg-gray-500';
+                statusBadge.classList.remove('hidden');
+                
+                // Hide previous results
+                resultsDetails.classList.add('hidden');
+                actionButtons.classList.add('hidden');
+                issuesContainer.classList.add('hidden');
+                
+                // Show progress bar
+                progressContainer.classList.remove('hidden');
+                
+                // Simulate processing
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 10;
+                    if (progress > 100) progress = 100;
+                    progressBar.style.width = `${progress}%`;
+                    
+                    if (progress === 100) {
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            processFile(file);
+                        }, 500);
+                    }
+                }, 200);
+            }
+            
+            function processFile(file) {
+                // Hide progress bar
+                progressContainer.classList.add('hidden');
+                
+                // Display preview image
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    placeholderText.classList.add('hidden');
+                    
+                    // Show results
+                    resultsDetails.classList.remove('hidden');
+                    actionButtons.classList.remove('hidden');
+                    
+                    // Generate random results for demo
+                    const randomQuantity = Math.floor(Math.random() * 10) + 1;
+                    const hasQualityIssue = Math.random() > 0.5;
+                    const issuesCount = hasQualityIssue ? Math.floor(Math.random() * 3) + 1 : 0;
+                    const isAccepted = !hasQualityIssue;
+                    
+                    // Update UI with results
+                    productId.textContent = 'PRD-' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+                    detectedQuantity.textContent = randomQuantity;
+                    quantityStatus.textContent = randomQuantity > 0 ? 'Verified' : 'Invalid';
+                    qualityIssues.textContent = issuesCount;
+                    
+                    if (isAccepted) {
+                        qualityStatus.textContent = 'Good';
+                        overallStatus.textContent = 'ACCEPTED';
+                        statusBadge.textContent = 'ACCEPTED';
+                        statusBadge.className = 'px-6 py-3 rounded-full text-white font-bold accepted-badge';
+                        
+                        // Clear any previous issues
+                        issuesList.innerHTML = '';
+                        issuesContainer.classList.add('hidden');
+                    } else {
+                        qualityStatus.textContent = 'Bad';
+                        overallStatus.textContent = 'NOT ACCEPTED';
+                        statusBadge.textContent = 'NOT ACCEPTED';
+                        statusBadge.className = 'px-6 py-3 rounded-full text-white font-bold rejected-badge';
+                        
+                        // Generate random issues
+                        const issues = [
+                            'Incorrect color',
+                            'Surface defect',
+                            'Missing component',
+                            'Wrong dimensions',
+                            'Poor stitching'
+                        ];
+                        
+                        issuesList.innerHTML = '';
+                        for (let i = 0; i < issuesCount; i++) {
+                            const li = document.createElement('li');
+                            li.textContent = issues[Math.floor(Math.random() * issues.length)];
+                            issuesList.appendChild(li);
+                        }
+                        
+                        issuesContainer.classList.remove('hidden');
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>
+
