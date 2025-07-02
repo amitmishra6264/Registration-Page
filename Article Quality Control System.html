@@ -32,9 +32,9 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="min-h-screen" style="background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/7eaef170-ba64-4e56-ac3d-4e3202f155ab.png'); background-size: cover; background-position: center;">
     <div class="container mx-auto px-4 py-12">
-        <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="max-w-3xl mx-auto bg-white/90 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border border-gray-300">
             <div class="p-8">
                 <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Article Quality Control System</h1>
                 
@@ -43,7 +43,7 @@
                     <div class="space-y-2">
                         <h2 class="text-xl font-semibold text-gray-700">Article Scanner</h2>
                         <div class="camera-feed w-full h-64 bg-gray-200 flex items-center justify-center relative">
-                            <img id="scanner-feed" src="https://placehold.co/640x360" alt="Article scanning live feed - industrial conveyor belt with articles moving through quality control system" class="w-full h-full object-cover">
+                            <img id="scanner-feed" src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/7d47d4b1-4b19-49ce-bcb7-3c989e8a37f0.png" alt="Industrial quality control scanner with conveyor belt system" class="w-full h-full object-cover">
                             <div id="scan-progress" class="absolute bottom-4 left-4 right-4 bg-gray-300 h-2 rounded-full overflow-hidden">
                                 <div class="progress-bar h-full bg-blue-500 w-0"></div>
                             </div>
@@ -66,7 +66,7 @@
                         <div class="space-y-4">
                             <div class="flex justify-between items-center">
                                 <h3 class="text-lg font-medium">Scan Results</h3>
-                                <span id="result-status" class="px-3 py-1 rounded-full text-sm font-medium"></span>
+                                <span id="result-status" class="px-4 py-2 rounded-lg text-lg font-bold tracking-wide uppercase"></span>
                             </div>
                             
                             <div class="grid grid-cols-2 gap-4">
