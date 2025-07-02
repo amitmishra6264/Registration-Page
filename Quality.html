@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Quality Control | CK HIL BIRLA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f0f4f8;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        }
+        
+        .item-card {
+            transition: all 0.3s ease;
+        }
+        
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status-badge {
+            border-radius: 9999px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .status-accepted {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-rejected {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(74, 222, 128, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+            }
+        }
+        
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(74, 222, 128, 0.8);
+            box-shadow: 0 2px 10px rgba(74, 222, 128, 0.6);
+            animation: scan 2s linear infinite;
+            display: none;
+        }
+        
+        @keyframes scan {
+            0% {
+                top: 0;
+                opacity: 1;
+            }
+            95% {
+                top: 100%;
+                opacity: 1;
+            }
+            100% {
+                top: 100%;
+                opacity: 0;
+            }
+        }
+        
+        .scanner-on .scan-line {
+            display: block;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <img src="https://placehold.co/60x60" alt="CK HIL BIRLA company logo - modern blue and white design with a professional sans-serif font" class="h-12 w-12 rounded-full border-2 border-white">
+                <h1 class="text-2xl font-bold">CK HIL BIRLA</h1>
+            </div>
+            <div class="text-lg font-medium">Article Quality Control System</div>
+        </div>
+    </header>
+    
+    <main class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Scanner Section -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden relative scanner-container">
+                <div class="scan-line"></div>
+                <div class="p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Article Scanner</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-12 cursor-pointer hover:border-blue-500 transition-colors" id="dropZone">
+                            <div class="text-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                </svg>
+                                <p class="text-gray-600">Drop your article image here <span class="block text-sm text-gray-400">or click to browse</span></p>
+                            </div>
+                            <input type="file" id="fileInput" accept="image/*" class="hidden">
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <input type="number" id="quantityInput" class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter article quantity">
+                            <button id="scanBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                                Scan
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-sm font-medium text-gray-600">Scan Progress</h3>
+                            <span id="scanPercentage" class="text-sm font-medium text-gray-600">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Results Section -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Inspection Results</h2>
+                    <div id="resultsContainer" class="min-h-64 flex items-center justify-center bg-gray-50 rounded-lg">
+                        <p class="text-grayaud500 text-center">Scan an article to see the results here</p>
+                    </div>
+                    
+                    <div id="validStatus" class="mt-6 hidden">
+                        <div class="flex items-center space-x-4">
+                            <div class="flex-1">
+                                <h3 class="font-medium text-gray-700">Quantity Check</h3>
+                                <p id="quantityResult" class="text-sm text-gray-600"></p>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="font-medium text-gray-700">Image Quality</h3>
+                                <p id="imageResult" class="text-sm text-gray-600"></p>
+                            </div>
+                        </div>
+                        
+                        <div id="finalStatus" class="mt-6 p-4 rounded-lg text-center hidden">
+                            <div class="text-3xl font-bold mb-2" id="statusText"></div>
+                            <p id="statusDetails" class="text-lg"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- History Section -->
+        <div class="mt-12">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Scans</h2>
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="p-6">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Article ID</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyBody" class="bg-white divide-y divide-gray-200">
+                                <!-- History items will be added here dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-4 text-center text-sm text-gray-500" id="noHistory">
+                        No scan history yet
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('fileInput');
+            const scanBtn = document.getElementById('scanBtn');
+            const quantityInput = document.getElementById('quantityInput');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const validStatus = document.getElementById('validStatus');
+            const progressBar = document.getElementById('progressBar');
+            const scanPercentage = document.getElementById('scanPercentage');
+            const finalStatus = document.getElementById('finalStatus');
+            const statusText = document.getElementById('statusText');
+            const statusDetails = document.getElementById('statusDetails');
+            const quantityResult = document.getElementById('quantityResult');
+            const imageResult = document.getElementById('imageResult');
+            const historyBody = document.getElementById('historyBody');
+            const noHistory = document.getElementById('noHistory');
+            
+            let currentFile = null;
+            let scanInProgress = false;
+            let scanHistory = [];
+            
+            // Drop zone event handlers
+            dropZone.addEventListener('click', () => fileInput.click());
+            
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length) {
+                    handleFile(e.target.files[0]);
+                }
+            });
+            
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('border-blue-500', 'bg-blue-50');
+                dropZone.classList.remove('border-gray-300');
+            });
+            
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+                dropZone.classList.add('border-gray-300');
+            });
+            
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+                dropZone.classList.add('border-gray-300');
+                
+                if (e.dataTransfer.files.length) {
+                    handleFile(e.dataTransfer.files[0]);
+                }
+            });
+            
+            // Scan button handler
+            scanBtn.addEventListener('click', function() {
+                if (scanInProgress) return;
+                
+                if (!currentFile) {
+                    alert('Please select an article image first');
+                    return;
+                }
+                
+                const quantity = quantityInput.value.trim();
+                if (!quantity || isNaN(quantity) || parseInt(quantity) <= 0) {
+                    alert('Please enter a valid quantity');
+                    return;
+                }
+                
+                startScanProcess();
+            });
+            
+            // Handle file selection
+            function handleFile(file) {
+                if (!file.type.match('image.*')) {
+                    alert('Please select an image file');
+                    return;
+                }
+                
+                currentFile = file;
+                displayPreview(file);
+            }
+            
+            // Display image preview
+            function displayPreview(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    resultsContainer.innerHTML = `
+                        <div class="relative w-full h-64 flex items-center justify-center">
+                            <img src="${e.target.result}" alt="Selected article preview - ${file.name}" class="max-w-full max-h-full object-contain rounded-lg shadow-sm">
+                        </div>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            // Start the scanning process
+            function startScanProcess() {
+                scanInProgress = true;
+                document.querySelector('.scanner-container').classList.add('scanner-on');
+                
+                // Simulate scanning progress
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 10;
+                    progress = Math.min(progress, 100);
+                    progressBar.style.width = `${progress}%`;
+                    scanPercentage.textContent = `${Math.floor(progress)}%`;
+                    
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        completeScan();
+                    }
+                }, 200);
+            }
+            
+            // Complete the scanning process
+            function completeScan() {
+                document.querySelector('.scanner-container').classList.remove('scanner-on');
+                scanInProgress = false;
+                
+                // For demo purposes, randomize the results
+                const quantity = parseInt(quantityInput.value);
+                const quantityValid = quantity >= 10 && quantity <= 1000; // Demo validation
+                const imageValid = Math.random() > 0.3; // 70% chance image is valid
+                
+                // Display results
+                validStatus.classList.remove('hidden');
+                
+                if (quantityValid) {
+                    quantityResult.innerHTML = `<span class="text-green-600">✓ ${quantity} units - Valid quantity</span>`;
+                } else {
+                    quantityResult.innerHTML = `<span class="text-red-600">✗ ${quantity} units - Invalid quantity (must be 10-1000)</span>`;
+                }
+                
+                if (imageValid) {
+                    imageResult.innerHTML = `<span class="text-green-600">✓ Good quality - Clear, well-lit image</span>`;
+                } else {
+                    imageResult.innerHTML = `<span class="text-red-600">✗ Low quality - Blurry, dark, or incomplete image</span>`;
+                }
+                
+                // Show final status
+                finalStatus.classList.remove('hidden');
+                
+                if (quantityValid && imageValid) {
+                    finalStatus.className = 'mt-6 p-4 rounded-lg text-center bg-green-50 border border-green-200';
+                    statusText.textContent = 'ACCEPTED';
+                    statusText.className = 'text-3xl font-bold mb-2 text-green-600';
+                    statusDetails.textContent = 'Article meets all quality standards';
+                } else {
+                    finalStatus.className = 'mt-6 p-4 rounded-lg text-center bg-red-50 border border-red-200';
+                    statusText.textContent = 'NOT ACCEPTED';
+                    statusText.className = 'text-3xl font-bold mb-2 text-red-600';
+                    
+                    if (!quantityValid && !imageValid) {
+                        statusDetails.textContent = 'Both quantity and image quality are invalid';
+                    } else if (!quantityValid) {
+                        statusDetails.textContent = 'Quantity is outside valid range';
+                    } else {
+                        statusDetails.textContent = 'Image quality does not meet requirements';
+                    }
+                }
+                
+                // Add to history
+                addToHistory(quantity, quantityValid, imageValid);
+            }
+            
+            // Add scan to history
+            function addToHistory(quantity, quantityValid, imageValid) {
+                const id = Date.now();
+                const timestamp = new Date().toLocaleTimeString();
+                const status = quantityValid && imageValid ? 'ACCEPTED' : 'NOT ACCEPTED';
+                
+                const historyItem = {
+                    id,
+                    quantity,
+                    status,
+                    timestamp,
+                    valid: status === 'ACCEPTED'
+                };
+                
+                scanHistory.unshift(historyItem);
+                updateHistoryTable();
+                
+                if (noHistory) noHistory.classList.add('hidden');
+            }
+            
+            // Update history table
+            function updateHistoryTable() {
+                historyBody.innerHTML = '';
+                
+                scanHistory.slice(0, 5).forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">#${item.id.toString().slice(-6)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="w-16 h-16 bg-gray-100 rounded-md overflow-hidden">
+                                <img src="https://placehold.co/100" alt="Scanned article thumbnail" class="w-full h-full object-cover">
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${item.quantity}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-badge ${item.valid ? 'status-accepted' : 'status-rejected'}">${item.status}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.timestamp}</td>
+                    `;
+                    historyBody.appendChild(row);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
